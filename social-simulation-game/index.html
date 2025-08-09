@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Xã Hội Thông Minh - Phiên Bản Nâng Cao</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <!-- Game Over Modal -->
+        <div id="gameOverModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>🛡️ GAME OVER!</h2>
+                <p>Hơn 50% dân số đang biểu tình phản đối chính quyền của bạn!</p>
+                <p>Bạn đã mất quyền lực và phải từ chức.</p>
+                <button onclick="restartGame()">🔄 Chơi lại</button>
+            </div>
+        </div>
+
+        <!-- Header với thông tin tổng quan -->
+        <div id="gameHeader">
+            <h1>🏛️ Mô Phỏng Xã Hội Thông Minh - Nâng Cao</h1>
+            <div id="gameStats">
+                <div class="stat-item">
+                    <span>👥 Dân số:</span>
+                    <span id="population">100,000</span>
+                </div>
+                <div class="stat-item">
+                    <span>💰 Ngân sách:</span>
+                    <span id="budget">$50,000,000</span>
+                </div>
+                <div class="stat-item">
+                    <span>📊 Hạnh phúc:</span>
+                    <span id="happiness">75%</span>
+                </div>
+                <div class="stat-item">
+                    <span>🛡️ Biểu tình:</span>
+                    <span id="protestPercent">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span>💼 Thất nghiệp:</span>
+                    <span id="unemployment">5%</span>
+                </div>
+                <div class="stat-item">
+                    <span>👶 Tỷ lệ sinh:</span>
+                    <span id="birthRate">2.1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Khu vực điều khiển chính sách -->
+        <div id="controlPanel">
+            <div id="policyControls">
+                <h3>🏛️ Chính sách Cơ bản</h3>
+                <div class="policy-group">
+                    <label>Thuế thu nhập: <span id="taxRate">15</span>%</label>
+                    <input type="range" id="taxSlider" min="0" max="60" value="15">
+                </div>
+                <div class="policy-group">
+                    <label>Ngân sách giáo dục: <span id="educationBudget">25</span>%</label>
+                    <input type="range" id="educationSlider" min="0" max="50" value="25">
+                </div>
+                <div class="policy-group">
+                    <label>Ngân sách y tế: <span id="healthBudget">20</span>%</label>
+                    <input type="range" id="healthSlider" min="0" max="50" value="20">
+                </div>
+                <div class="policy-group">
+                    <label>Ngân sách an ninh: <span id="securityBudget">15</span>%</label>
+                    <input type="range" id="securitySlider" min="0" max="40" value="15">
+                </div>
+                <div class="policy-group">
+                    <label>Ngân sách hạ tầng: <span id="infrastructureBudget">20</span>%</label>
+                    <input type="range" id="infrastructureSlider" min="0" max="40" value="20">
+                </div>
+            </div>
+
+            <div id="eventControls">
+                <h3>🎊 Sự kiện Đặc biệt</h3>
+                <button id="musicFestival" onclick="organizeEvent('music_festival')">🎵 Lễ hội âm nhạc ($500K)</button>
+                <button id="sportEvent" onclick="organizeEvent('sport_event')">⚽ Giải thể thao ($300K)</button>
+                <button id="culturalFest" onclick="organizeEvent('cultural_festival')">🎭 Lễ hội văn hóa ($400K)</button>
+                <button id="fireworks" onclick="organizeEvent('fireworks')">🎆 Bắn pháo hoa ($200K)</button>
+                <button id="freeFood" onclick="organizeEvent('free_food')">🍕 Phát thức ăn miễn phí ($800K)</button>
+            </div>
+
+            <div id="districtControls">
+                <h3>🏘️ Quản lý Quận</h3>
+                <select id="districtSelect">
+                    <option value="district1">Quận 1 (Trung tâm)</option>
+                    <option value="district2">Quận 2 (Công nghiệp)</option>
+                    <option value="district3">Quận 3 (Dân cư)</option>
+                    <option value="district4">Quận 4 (Nông nghiệp)</option>
+                </select>
+                <button id="buildFactory">🏭 Xây nhà máy ($2M)</button>
+                <button id="buildSchool">🏫 Xây trường học ($1.5M)</button>
+                <button id="buildHospital">🏥 Xây bệnh viện ($3M)</button>
+                <button id="buildPark">🌳 Xây công viên ($800K)</button>
+                <button id="buildShoppingMall">🛒 Xây trung tâm thương mại ($2.5M)</button>
+            </div>
+        </div>
+
+        <!-- Khu vực hiển thị game -->
+        <div id="gameDisplay">
+            <canvas id="gameCanvas" width="1200" height="700"></canvas>
+            <div id="gameSpeed">
+                <label>Tốc độ game: <span id="speedValue">1x</span></label>
+                <input type="range" id="speedSlider" min="1" max="10" value="1">
+            </div>
+        </div>
+
+        <!-- Panel thông tin chi tiết -->
+        <div id="infoPanel">
+            <div id="citizenInfo">
+                <h3>👤 Thông tin dân</h3>
+                <div id="selectedCitizenInfo">Click vào dân để xem thông tin chi tiết</div>
+            </div>
+
+            <div id="lifeStats">
+                <h3>👨‍👩‍👧‍👦 Thống kê Đời sống</h3>
+                <div id="lifeStatsContent">
+                    <div class="stat-row">Tổng số gia đình: <span id="totalFamilies">0</span></div>
+                    <div class="stat-row">Sinh trong ngày: <span id="todayBirths">0</span></div>
+                    <div class="stat-row">Mất trong ngày: <span id="todayDeaths">0</span></div>
+                    <div class="stat-row">Kết hôn trong ngày: <span id="todayMarriages">0</span></div>
+                    <div class="stat-row">Tuổi thọ trung bình: <span id="averageLifespan">65</span></div>
+                </div>
+            </div>
+
+            <div id="economicInfo">
+                <h3>💼 Thống kê Kinh tế</h3>
+                <div id="economicStatsContent">
+                    <div class="stat-row">Thu thuế/tháng: <span id="monthlyTax">$0</span></div>
+                    <div class="stat-row">Chi tiêu/tháng: <span id="monthlyExpense">$0</span></div>
+                    <div class="stat-row">Lạm phát: <span id="inflation">2.1%</span></div>
+                    <div class="stat-row">Tăng trưởng kinh tế: <span id="growth">3.2%</span></div>
+                </div>
+            </div>
+
+            <div id="eventLog">
+                <h3>📰 Sự kiện & Tin tức</h3>
+                <div id="events"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/citizen-advanced.js"></script>
+    <script src="js/economy-advanced.js"></script>
+    <script src="js/policy-advanced.js"></script>
+    <script src="js/districts-advanced.js"></script>
+    <script src="js/life-cycle.js"></script>
+    <script src="js/main-advanced.js"></script>
+</body>
+</html>
